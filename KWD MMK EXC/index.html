@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KWD ⇄ MMK Express Remittance</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Service Closed Notice Overlay -->
+  <div id="closedNotice" class="closed-overlay" style="display: none;">
+    <div class="closed-card animate-pop">
+      <div class="icon">🚫</div>
+      <h2>ငွေလွှဲဝန်ဆောင်မှု ခေတ္တပိတ်ထားပါသည်</h2>
+      <p>လက်ရှိတွင် ဝန်ဆောင်မှု ပိတ်ထားပါသဖြင့် ခဏအကြာမှ ပြန်လည် ကြိုးစားပေးပါ။ ကျေးဇူးတင်ပါသည်။</p>
+    </div>
+  </div>
+
+  <div class="background-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="container animate-fade-in">
+    <div class="card glass-card">
+      
+      <div class="header">
+        <span class="badge pulse">Live Exchange Service</span>
+        <h2>KWD ⇄ MMK Express</h2>
+        <p class="subtitle">မြန်ဆန် စိတ်ချရသော ကူဝိတ်-မြန်မာ ငွေလွှဲစနစ်</p>
+      </div>
+
+      <!-- Live Rate Display (User Cannot Change) -->
+      <div class="rate-card">
+        <span class="rate-label">ယနေ့ ပေါက်ဈေး (1 KWD)</span>
+        <div class="rate-value"><span id="currentRateDisplay">13950</span> <small>MMK</small></div>
+      </div>
+
+      <!-- Calculator Section -->
+      <div class="form-group">
+        <label for="kwdAmount">လွှဲပြောင်းလိုသည့် KWD ပမာဏ:</label>
+        <div class="input-wrapper">
+          <input type="number" id="kwdAmount" placeholder="0.00" oninput="calculateMMK()">
+          <span class="currency-tag">KWD</span>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <span>လက်ခံရရှိမည့် မြန်မာကျပ်ငွေ</span>
+        <h3 id="mmkResult">0 MMK</h3>
+      </div>
+
+      <hr class="divider">
+
+      <!-- KBZPay Info -->
+      <h3 class="section-title">မြန်မာဘက်မှ ငွေလက်ခံမည့် အချက်အလက်</h3>
+      
+      <div class="form-group">
+        <label for="kpayName">KBZPay အကောင့်အမည်</label>
+        <input type="text" id="kpayName" placeholder="ဥပမာ - U Ba">
+      </div>
+
+      <div class="form-group">
+        <label for="kpayPhone">KBZPay ဖုန်းနံပါတ်</label>
+        <input type="tel" id="kpayPhone" placeholder="09xxxxxxxxx">
+      </div>
+
+      <div class="form-group">
+        <label for="userWhatsapp">သင့် WhatsApp ဖုန်းနံပါတ် (ငွေလွှဲပြီးပါက ပြန်လည်ဆက်သွယ်ရန်)</label>
+        <input type="tel" id="userWhatsapp" placeholder="+965 xxxxxxxx">
+      </div>
+
+      <!-- WAMD Payment Instructions -->
+      <div class="wamd-card">
+        <div class="wamd-header">
+          <h4>WAMD ဖြင့် ငွေလွှဲရန်</h4>
+          <span class="wamd-badge">Kuwait Only</span>
+        </div>
+        <p>အထက်ပါ ဖောင်ဖြည့်ပြီးပါက အောက်ပါ WAMD နံပါတ်သို့ ငွေလွှဲပေးပါ:</p>
+        
+        <div class="wamd-info-box">
+          <div class="wamd-number">
+            <div>
+              <span class="wamd-label">WAMD Number</span>
+              <strong id="wamdNum">65082016</strong>
+            </div>
+            <button type="button" class="btn-copy" onclick="copyWamd()">Copy</button>
+          </div>
+          
+          <div class="wamd-account-name">
+            <span class="wamd-label">Account Name:</span>
+            <strong>Kaung Htet San</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screenshot Upload Section -->
+      <div class="form-group">
+        <label for="slipUpload">WAMD လွှဲပြီးကြောင်း Screenshot / Slip တင်ပါ</label>
+        <input type="file" id="slipUpload" accept="image/*">
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn-submit" id="submitBtn" onclick="submitOrder()">
+        <span>Order အတည်ပြုမည်</span>
+      </button>
+
+      <!-- Success Message Box -->
+      <div id="successMsg" class="success-card" style="display:none;">
+        <div class="success-icon">🎉</div>
+        <h4>Order တင်ခြင်း အောင်မြင်ပါသည်။</h4>
+        <p>ငွေလွှဲစစ်ဆေးပြီးပါက သင့် WhatsApp သို့ ပြန်လည် ဆက်သွယ်ပေးပါမည်။</p>
+      </div>
+
+      <hr class="divider">
+
+      <!-- WhatsApp Contact Support Section -->
+      <div class="contact-support">
+        <p>အကူအညီ သို့မဟုတ် စုံစမ်းမေးမြန်းလိုပါက ဆက်သွယ်ရန်</p>
+        <a href="https://wa.me/65082016" target="_blank" class="btn-whatsapp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.001 3.66 3.744-.993z"/></svg>
+          <span>WhatsApp ဖြင့် ဆက်သွယ်ရန် (65082016)</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // ADMIN SETTINGS (ငွေဈေး နှင့် ပိတ်/ဖွင့် ထိန်းချုပ်ရန်)
+    // ==========================================
+    const isServiceOpen = true; // true = ဖွင့်မည်, false = ခေတ္တပိတ်မည်
+    const CURRENT_EXCHANGE_RATE = 13950; // ငါ သတ်မှတ်မယ့် ယနေ့ ငွေလဲနှုန်း
+
+    // API KEYS
+    const SHEETDB_URL = "https://sheetdb.io/api/v1/mjor9lim9spq3";
+    const IMGBB_API_KEY = "ab2674cab6db3c82869e24dd0ff6a6b9"; // https://api.imgbb.com မှ ရယူပါ
+
+    // Setup Initial Page Data
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById('currentRateDisplay').innerText = CURRENT_EXCHANGE_RATE.toLocaleString();
+      
+      if (!isServiceOpen) {
+        document.getElementById('closedNotice').style.display = 'flex';
+      }
+    });
+
+    function calculateMMK() {
+      const kwd = parseFloat(document.getElementById('kwdAmount').value) || 0;
+      const totalMMK = CURRENT_EXCHANGE_RATE * kwd;
+      document.getElementById('mmkResult').innerText = totalMMK.toLocaleString() + " MMK";
+    }
+
+    function copyWamd() {
+      const numText = document.getElementById('wamdNum').innerText;
+      navigator.clipboard.writeText(numText);
+      alert("WAMD နံပါတ် Copy ကူးပြီးပါပြီ: " + numText);
+    }
+
+    async function submitOrder() {
+      const kwd = document.getElementById('kwdAmount').value;
+      const mmk = document.getElementById('mmkResult').innerText;
+      const kpayName = document.getElementById('kpayName').value;
+      const kpayPhone = document.getElementById('kpayPhone').value;
+      const userWhatsapp = document.getElementById('userWhatsapp').value;
+      const slipFile = document.getElementById('slipUpload').files[0];
+
+      if (!kwd || !kpayName || !kpayPhone || !userWhatsapp || !slipFile) {
+        alert("ကျေးဇူးပြု၍ Screenshot အပါအဝင် အချက်အလက်များ အားလုံး ဖြည့်ပေးပါ။");
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.innerText = "ပုံ Upload တင်နေသည်...";
+      btn.disabled = true;
+
+      try {
+        // 1. Upload Slip Image to ImgBB
+        const formData = new FormData();
+        formData.append("image", slipFile);
+
+        const imgResponse = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+          method: "POST",
+          body: formData
+        });
+        const imgData = await imgResponse.json();
+
+        if (!imgData.success) {
+          throw new Error("Image Upload Failed");
+        }
+
+        const imageUrl = imgData.data.url;
+        btn.innerText = "Order စာရင်းသွင်းနေသည်...";
+
+        // 2. Save Order Data to Google Sheet via SheetDB
+        const orderData = {
+          data: [{
+            Date: new Date().toLocaleString(),
+            KWD: kwd,
+            MMK: mmk,
+            KBZPay_Name: kpayName,
+            KBZPay_Phone: kpayPhone,
+            WhatsApp: userWhatsapp,
+            Slip_URL: imageUrl
+          }]
+        };
+
+        const sheetResponse = await fetch(SHEETDB_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+
+        btn.style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+
+      } catch (error) {
+        alert("အမှားအယွင်းတစ်ခု ဖြစ်ပေါ်ခဲ့ပါသည်။ ကျေးဇူးပြု၍ ပြန်လည်ကြိုးစားပါ။");
+        btn.innerText = "Order အတည်ပြုမည်";
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
